@@ -1,13 +1,30 @@
 import { format, formatDistanceToNow } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
-import { useState } from "react";
+import { FormEvent, InvalidEvent, useState } from "react";
 
 import { Avatar } from "../Avatar";
 import { Comment } from "../Comment";
 
 import styles from "./Post.module.css";
 
-export function Post({ author, content, publishedAt }) {
+interface Author {
+  name: string;
+  avatarUrl: string;
+  role: string;
+}
+
+interface Content {
+  type: "paragraph" | "link" | string;
+  content: string;
+}
+
+interface PostProp {
+  author: Author;
+  content: Content[];
+  publishedAt: Date;
+}
+
+export function Post({ author, content, publishedAt }: PostProp) {
   const [comments, setComments] = useState(["Post muito bacana, hein?!"]);
   const [newCommentText, setNewCommentText] = useState("");
 
@@ -24,18 +41,18 @@ export function Post({ author, content, publishedAt }) {
     addSuffix: true,
   });
 
-  function handleCreateNewComment() {
+  function handleCreateNewComment(event: FormEvent) {
     event.preventDefault();
 
     setComments([...comments, newCommentText]);
     setNewCommentText("");
   }
 
-  function handleNewCommentInvalid() {
+  function handleNewCommentInvalid(event: InvalidEvent<HTMLTextAreaElement>) {
     event.target.setCustomValidity("Esse Campo é obrigatório");
   }
 
-  function deleteComment(commentToDelete) {
+  function deleteComment(commentToDelete: string) {
     const commentWithoutDeleteOne = comments.filter((comment) => {
       return comment !== commentToDelete;
     });
@@ -49,7 +66,7 @@ export function Post({ author, content, publishedAt }) {
     <article className={styles.post}>
       <header>
         <div className={styles.author}>
-          <Avatar src={author.avatarUrl} />
+          <Avatar src={author.avatarUrl} alt="" />
           <div className={styles.authorInfo}>
             <strong>{author.name}</strong>
             <span>{author.role}</span>

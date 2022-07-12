@@ -6,7 +6,7 @@ import styles from "./App.module.css";
 
 import "./global.css";
 
-const pots = [
+const posts = [
   {
     id: 1,
     author: {
@@ -67,13 +67,16 @@ const pots = [
 ];
 
 export function App() {
+  {
+    console.log(posts);
+  }
   return (
     <>
       <Header />
       <div className={styles.wrapper}>
         <Sidebar />
         <main>
-          {pots.map((post) => (
+          {posts.map((post) => (
             <Post
               key={post.id}
               author={post.author}
